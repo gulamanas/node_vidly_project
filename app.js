@@ -1,5 +1,6 @@
 const Joi = require('joi');
-const genresRoute = require('./routes/genres')
+const genresRoute = require('./routes/genres');
+const customerRoute = require('./routes/customers');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -12,6 +13,7 @@ mongoose.connect('mongodb://localhost/vidly')
 
 
 app.use(genresRoute);
+app.use(customerRoute);
 
 const port = process.env.PORT || 9009
 app.listen(port, () => {
