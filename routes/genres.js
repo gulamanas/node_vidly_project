@@ -1,21 +1,8 @@
+const Genre = require('../models/genre')
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-// const genres = [
-//     { id: 1, name: 'Action' },
-//     { id: 2, name: 'Horor' },
-//     { id: 3, name: 'Romance' },
-// ]
-
-const Genre = mongoose.model('Genre', new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 50,
-    }
-}))
 
 router.get('/api/genres', async (req, res) => {
     const genres = await Genre.find().sort('name');
@@ -26,7 +13,9 @@ router.post('/api/genres', async (req, res) => {
     const { error } = req.body;
     if (error) return res.send(400).send(error.details[0].message);
 
-    let genre = new Genre({ name: req.body.name })
+    let genre = new Genre({
+        name: req.body.name,
+    })
     genre = await genre.save()
 
     res.send(genre);
