@@ -3,6 +3,7 @@ const genresRoute = require('./routes/genres');
 const customerRoute = require('./routes/customers');
 const movieRoute = require('./routes/movies');
 const rentalRoute = require('./routes/rentals');
+const usersRoute = require('./routes/users');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -18,6 +19,7 @@ app.use(genresRoute);
 app.use(customerRoute);
 app.use(movieRoute);
 app.use(rentalRoute);
+app.use(usersRoute);
 
 const port = process.env.PORT || 9009
 app.listen(port, () => {
