@@ -1,3 +1,4 @@
+
 const bcrypt = require('bcrypt')
 const { User, validate } = require('../models/user')
 const express = require('express');
@@ -19,7 +20,8 @@ router.post('/api/users', async (req, res) => {
 
         await user.save();
 
-        res.send(user)
+        const token = user.generateAuthToken();
+        res.header('x-auth-token', token).send(user)
     }
     catch (err) {
         res.status(500).send(`${err.message}`)

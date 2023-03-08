@@ -1,6 +1,7 @@
 const { Genre } = require('../models/genre')
 const express = require('express');
 const mongoose = require('mongoose');
+const auth = require('../middleware/auth');
 const router = express.Router();
 
 
@@ -9,16 +10,18 @@ router.get('/api/genres', async (req, res) => {
     res.send(genres);
 })
 
-router.post('/api/genres', async (req, res) => {
-    const { error } = req.body;
-    if (error) return res.send(400).send(error.details[0].message);
+router.post('/api/genres', auth, async (req, res) => {
+    try {
+        let genre = new Genre({
+            name: req.body.name,
+        })
+        genre = await genre.save()
 
-    let genre = new Genre({
-        name: req.body.name,
-    })
-    genre = await genre.save()
+        res.send(genre);
 
-    res.send(genre);
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
 })
 
 router.put('/api/genres/:id', async (req, res) => {
