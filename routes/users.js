@@ -1,9 +1,19 @@
-
+const auth = require('../middleware/auth')
 const bcrypt = require('bcrypt')
 const { User, validate } = require('../models/user')
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
+
+router.get('/api/users/me', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('-password');
+        res.send(user);
+
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
+})
 
 router.post('/api/users', async (req, res) => {
     try {
