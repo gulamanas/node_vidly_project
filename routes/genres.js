@@ -2,6 +2,7 @@ const { Genre } = require('../models/genre')
 const express = require('express');
 const mongoose = require('mongoose');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const router = express.Router();
 
 
@@ -38,12 +39,17 @@ router.put('/api/genres/:id', async (req, res) => {
     res.send(genre);
 })
 
-router.delete('/api/genres/:id', async (req, res) => {
-    const genre = await Genre.findByIdAndRemove(req.params.id);
+router.delete('/api/genres/:id', [auth, admin], async (req, res) => {
+    try {
+        const genre = await Genre.findByIdAndRemove(req.params.id);
 
-    if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+        if (!genre) return res.status(404).send('The genre with the given ID was not found.');
 
-    res.send(genre);
+        res.send(genre);
+
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 });
 
 router.get('/api/genres/:id', async (req, res) => {
@@ -54,12 +60,5 @@ router.get('/api/genres/:id', async (req, res) => {
     res.send(genre);
 })
 
-// function validateGenre(genre) {
-//     const schema = {
-//         name: Joi.string().min(3).required()
-//     };
-
-//     return Joi.validate(genre, schema);
-// }
 
 module.exports = router;

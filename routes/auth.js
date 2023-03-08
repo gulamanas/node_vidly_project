@@ -14,11 +14,10 @@ router.post('/api/login', async (req, res) => {
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) return res.status(400).send('Invalid password');
 
-        const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
-        // const token = user.genarateAuthToken();
+        const token = user.generateAuthToken();
         res.send(token)
     } catch (error) {
-        res.status(500).send(`${err.message}`)
+        res.status(500).send(error.message)
     }
 });
 
